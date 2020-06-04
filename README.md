@@ -1,30 +1,17 @@
 # PostCSS Tiger Ria
 
-[PostCSS] plugin A utility-first CSS framework for rapidly building custom user interfaces like tailwindcss.
+一个postcss插件，获得原子式的css开发体验，能极大缩减最终css文件的大小。借鉴启发于[tailwindcss]
 
-[PostCSS]: https://github.com/postcss/postcss
+[tailwindcss]: https://tailwindcss.com/
 
-```css
-.foo {
-    /* Input example */
-}
+## 安装
+
 ```
-
-```css
-.foo {
-  /* Output example */
-}
+npm i -D postcss-tiger-ria
 ```
-
-## Usage
-
-Check you project for existed PostCSS config: `postcss.config.js`
-in the project root, `"postcss"` section in `package.json`
-or `postcss` in bundle config.
-
-If you already use PostCSS, add the plugin to plugins list:
-
+依赖于[postcss]，将本插件加入postcss插件列表即可
 ```diff
+// example postcss.config.js
 module.exports = {
   plugins: [
 +   require('postcss-tiger-ria'),
@@ -33,7 +20,63 @@ module.exports = {
 }
 ```
 
-If you do not use PostCSS, add it according to [official docs]
-and set this plugin in settings.
+[postcss]: https://github.com/postcss/postcss#usage
 
-[official docs]: https://github.com/postcss/postcss#usage
+## 文档
+
+### 配置
+
+默认情况下，会在你的项目根目录寻找名为riacss.config.js的配置文件
+```js
+// example
+module.exports = {
+  purge: [],
+  separator: ':',
+  theme: {
+    screens: {
+        sm: '640px',
+        md: '768px',
+        lg: '1024px',
+        xl: '1280px',
+    },
+    extend: {
+      colors: {
+        font: {
+          cyan: '#9cdbff',
+        },
+      },
+      screens: {
+        xxl: '1400px',
+      },
+    },
+  },
+  style: {
+    display: {
+      hidden: 'none',
+      block: 'block',
+      'inline-block': 'inline-block',
+      inline: 'inline',
+      flex: 'flex',
+      'inline-flex': 'inline-flex',
+    },
+    zIndex: (theme) => theme('size.zIndex'),
+  },
+  variants: {
+    color: ['responsive', 'hover'],
+  },
+  plugins: [],
+}
+```
+purge用于配置如何移除无用的css，用了 [PurgeCSS] 这个工具
+
+[PurgeCSS]: https://purgecss.com/
+
+separator是生成variants（变体）时用的分隔符
+
+variants则是生成变体（形如hover:text-red、md:flex-grow的支持伪类与响应式的类）的配置
+
+theme是生成工具类用到的定制主题，theme的属性的定义会直接覆盖默认配置，如果只是想拓展而不是覆盖则使用extend来配置即可，如上
+
+style是生成工具类的具体定义，style的属性既可以是对象也可以是个方法，方法的参数就是用于获取theme配置的方法，如上。所以可以看出theme是服务于style的
+
+plugins是用于自定义工具类与变体的插件

@@ -208,7 +208,7 @@ const defaultConfig = {
             middle: 'middle',
             bottom: 'bottom',
         },
-        whiteSpace: {
+        whitespace: {
             normal: 'normal',
             'no-wrap': 'nowrap',
             pre: 'pre',

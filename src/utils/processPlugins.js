@@ -21,6 +21,7 @@ export default function (plugins, config) {
 
     plugins.forEach((plugin) => {
         plugin({
+            config: getConfigValue,
             style: (path, defaultValue) => getConfigValue(`style.${path}`, defaultValue),
             variants: (path, defaultValue) => {
                 if (Array.isArray(config.variants)) {

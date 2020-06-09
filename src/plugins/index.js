@@ -45,6 +45,5 @@ const plugins = [
     outline,
     resize,
 ];
-// const plugins = [display, textAlign, color];
 
 export default plugins;

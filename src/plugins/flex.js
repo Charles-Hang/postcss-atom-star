@@ -3,7 +3,6 @@ import createUtilityPlugin from '../utils/createUtilityPlugin';
 export default function (pluginConfig) {
     createUtilityPlugin('flex', [['flex', ['flex']]])(pluginConfig);
     createUtilityPlugin('flexDirection', [['flex', ['flex-direction']]])(pluginConfig);
-    createUtilityPlugin('flexDirection', [['flex', ['flex-direction']]])(pluginConfig);
     createUtilityPlugin('flexWrap', [['flex', ['flex-wrap']]])(pluginConfig);
     createUtilityPlugin('flexShrink', [['flex-shrink', ['flex-shrink']]])(pluginConfig);
     createUtilityPlugin('flexGrow', [['flex-grow', ['flex-grow']]])(pluginConfig);

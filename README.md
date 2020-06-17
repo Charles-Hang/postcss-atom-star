@@ -368,7 +368,7 @@ module.exports = {
 
 #### style
 
-style是生成工具类的具体定义，style对象里的键名不可更改，只可配置属性值。style里的属性值既可以是对象也可以是个方法，方法的参数就是用于获取theme配置的方法，如上面的例子。所以可以看出theme是服务于style的，工具类的生成上按一定的规则，key拼在类名中，key为`default`时表示不拼接，value拼在属性中，下面是默认的配置说明
+style是生成工具类的具体定义，style对象里的键名不可更改，只可配置属性值。style里的属性值既可以是对象也可以是个方法，方法的参数就是用于获取theme配置的方法，如上面的例子。所以可以看出theme是服务于style的，工具类的生成上按一定的规则，key拼在类名中，key为`default`时表示不拼接，若就想拼default则使用`-default`代替，value拼在属性中，下面是默认的配置说明
 ```js
 // 默认的style配置
 style: {
@@ -701,7 +701,7 @@ variants: {
     lineHeight: ['responsive'],
     textAlign: ['responsive'],
     verticalAlign: ['responsive'],
-    whiteSpace: ['responsive'],
+    whitespace: ['responsive'],
     overflowWrap: ['responsive'],
     wordBreak: ['responsive'],
     color: ['responsive', 'hover'],

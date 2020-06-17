@@ -3,9 +3,13 @@ import fromPairs from 'lodash/fromPairs';
 import toPairs from 'lodash/toPairs';
 import castArray from 'lodash/castArray';
 
-function className(classPrefix, key, defaultPrefix) {
+export function className(classPrefix, key, defaultPrefix) {
     if (key === 'default') {
         return classPrefix || defaultPrefix;
+    }
+
+    if (key === '-default') {
+        return `${classPrefix}-default`;
     }
 
     if (!classPrefix) {

@@ -262,7 +262,7 @@ const defaultConfig = {
         },
         cursor: {
             auto: 'auto',
-            default: 'default',
+            '-default': 'default',
             pointer: 'pointer',
             move: 'move',
             'not-allow': 'not-allowed',
@@ -301,7 +301,7 @@ const defaultConfig = {
         lineHeight: ['responsive'],
         textAlign: ['responsive'],
         verticalAlign: ['responsive'],
-        whiteSpace: ['responsive'],
+        whitespace: ['responsive'],
         overflowWrap: ['responsive'],
         wordBreak: ['responsive'],
         color: ['responsive', 'hover'],

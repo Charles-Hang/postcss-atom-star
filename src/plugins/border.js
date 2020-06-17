@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import createUtilityPlugin from '../utils/createUtilityPlugin';
+import createUtilityPlugin, { className } from '../utils/createUtilityPlugin';
 
 export default function (pluginConfig) {
     const {
@@ -9,20 +9,20 @@ export default function (pluginConfig) {
         style,
     } = pluginConfig;
     const genderator = (value, key) => ({
-        [`.${key === 'default' ? 'border' : escape(`border-${key}`)}`]: { 'border-width': `${value}` },
-        [`.${key === 'default' ? 'border-t' : escape(`border-t-${key}`)}`]: {
+        [`.${escape(className('border', key, 'borderWidth'))}`]: { 'border-width': `${value}` },
+        [`.${escape(className('border-t', key, 'borderWidth'))}`]: {
             border: 0,
             'border-top-width': `${value}`,
         },
-        [`.${key === 'default' ? 'border-r' : escape(`border-r-${key}`)}`]: {
+        [`.${escape(className('border-r', key, 'borderWidth'))}`]: {
             border: 0,
             'border-right-width': `${value}`,
         },
-        [`.${key === 'default' ? 'border-b' : escape(`border-b-${key}`)}`]: {
+        [`.${escape(className('border-b', key, 'borderWidth'))}`]: {
             border: 0,
             'border-bottom-width': `${value}`,
         },
-        [`.${key === 'default' ? 'border-l' : escape(`border-l-${key}`)}`]: {
+        [`.${escape(className('border-l', key, 'borderWidth'))}`]: {
             border: 0,
             'border-left-width': `${value}`,
         },
@@ -30,7 +30,6 @@ export default function (pluginConfig) {
     const utilities = _.flatMap(style('borderWidth'), genderator);
 
     addUtilities(utilities, variants('borderWidth'));
-    createUtilityPlugin('borderWidth', [['border', ['border-width']]])(pluginConfig);
     createUtilityPlugin('borderColor', [['border', ['border-color']]])(pluginConfig);
     createUtilityPlugin('borderStyle', [['border', ['border-style']]])(pluginConfig);
     createUtilityPlugin('borderRadius', [['rounded', ['border-radius']]])(pluginConfig);

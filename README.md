@@ -8,6 +8,7 @@
 
 - [PostCSS Tiger Ria](#postcss-tiger-ria)
     - [安装](#安装)
+    - [vscode补全提示插件](#vscode补全提示插件)
     - [文档](#文档)
         - [基本使用](#基本使用)
             - [工具类](#工具类)
@@ -45,6 +46,12 @@ module.exports = {
 ```
 
 [postcss]: https://github.com/postcss/postcss#usage
+
+## vscode补全提示插件
+
+vscode下提供了补全提示插件[ria css autocomplete vscode]
+
+[ria css autocomplete vscode]: https://marketplace.visualstudio.com/items?itemName=tiger-hswx.ria-css-autocomplete-vscode
 
 ## 文档
 

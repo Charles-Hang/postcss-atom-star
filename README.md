@@ -14,18 +14,12 @@
             - [工具类](#工具类)
             - [@apply](#apply)
             - [@screen](#screen)
-            - [变体](#变体)
         - [配置](#配置)
-            - [purge](#purge)
-            - [separator](#separator)
             - [theme](#theme)
                 - [theme.screens](#themescreens)
             - [style](#style)
-            - [variants](#variants)
             - [plugins](#plugins)
                 - [自定义工具类](#自定义工具类)
-                - [自定义变体](#自定义变体)
-        - [原理](#原理)
 
 <!-- /TOC -->
 
@@ -129,40 +123,6 @@ vscode下提供了补全提示插件[ria css autocomplete vscode]
 ```
 md为配置文件中theme.screens中的项，(min-width: 640px)为md的配置，配置相关的说明后面会具体再说
 
-#### 变体
-
-单纯的工具类无法满足伪类及响应式的需求场景，故产生了变体这一形式：
-```jsx
-{/* react组件中 */}
-
-{/* 响应式变体 */}
-{/*  默认宽16，中等屏幕宽32，大屏宽48 */}
-<img className="w-16 md:w-32 lg:w-48" src="...">
-
-{/* 伪类变体*/}
-{/* 默认透明背景蓝色字体，hover时蓝色背景白色字体 */}
-<button className="bg-transparent text-blue hover:bg-blue hover:text-white">
-    hover me
-</button>
-```
-变体形如：{变体前缀}{分隔符}{工具类名}，有个例外，响应式变体还有这种使用方式：{响应式变体前缀}{分隔符}{其他变体前缀}{分隔符}{工具类名}，如md:hover:text-blue既中等屏hover时字体为蓝色
-
-需注意使用@apply时不能引用变体：
-```css
-.btn {
-    /* 不能引入变体 */
-    @apply hover:text-blue;
-}
-```
-
-默认情况下生成的响应式变体会插入到css文件的末尾，如果想指定生成的位置可以这样：
-```css
-/* 你的样式文件 */
-/* 响应式变体生成的位置*/
-@riacss screens;
-```
-还可以配置添加自己个性化的变体，配置相关的说明后面会具体再说
-
 ### 配置
 
 默认情况下，会在你的项目根目录寻找名为riacss.config.js的配置文件，也可以自定义配置文件路径
@@ -175,10 +135,8 @@ module.exports = {
 }
 ```
 ```js
-// 举例你的配置文件
+// 举例，你的配置文件
 module.exports = {
-    purge: [],
-    separator: ':',
     theme: {
         screens: {
             sm: '640px',
@@ -187,14 +145,14 @@ module.exports = {
             xl: '1280px',
         },
         extend: {
-        colors: {
-            font: {
-            cyan: '#9cdbff',
+            colors: {
+                font: {
+                    cyan: '#9cdbff',
+                },
             },
-        },
-        screens: {
-            xxl: '1400px',
-        },
+            screens: {
+                xxl: '1400px',
+            },
         },
     },
     style: {
@@ -208,47 +166,13 @@ module.exports = {
         },
         zIndex: (theme) => theme('size.zIndex'),
     },
-    variants: {
-        color: ['responsive', 'hover'],
-    },
     plugins: [],
 }
 ```
 
-#### purge
-
-purge用于配置如何移除本插件生成但是无用的css，用了 [PurgeCSS] 这个工具，purge默认为空数组
-
-[PurgeCSS]: https://purgecss.com/
-
-当purge为数组时表示purgecss的content配置，当为对象时：
-```js
-purge: {
-    // purgecss功能是否开启，默认情况下只在生产环境开启
-    enabled: true,
-    // purgecss的content配置
-    content: ['./src/**/*.tsx', './src/**/*.ts'],
-    // purgecss的其他配置
-    options: {
-        // 如白名单
-        whitelist: ['text-blue', 'p-24'],
-    }
-},
-```
-为保证能正确移除无用css，应避免用拼接的方式使用工具类：
-```jsx
-{/* 错误 */}
-<div className={`text-${error ? 'red' : 'green'}`}></div>
-{/* 正确 */}
-<div className={error ? 'text-read' : 'text-green'}></div>
-```
-#### separator
-
-separator是生成变体时用的分隔符，默认配置为`:`
-
 #### theme
 
-theme是生成工具类用到的定制主题，theme的属性的定义会直接覆盖默认配置，如果只是想拓展而不是覆盖则使用extend来配置即可，如上面的例子，theme中除了screens的结构不可变外（用于响应式变体的生成），其他的可随意配置
+theme是生成工具类用到的定制主题，theme的属性的定义会直接覆盖默认配置，如果只是想拓展而不是覆盖则使用extend来配置即可，如上面的例子，theme中除了screens的结构不可变外（用于配合@screen的使用），其他的可随意配置
 
 默认配置为：
 ```js
@@ -273,6 +197,7 @@ theme: {
             red: '#ff8080',
             purple: '#9e63f0',
             yellow: '#ffba1a',
+            white: '#fff',
         },
         background: {
             transparent: 'transparent',
@@ -284,6 +209,7 @@ theme: {
             red: '#ffefef',
             purple: '#f4f0fd',
             yellow: '#fff6e4',
+            white: '#fff',
         },
         border: {
             gray: '#f5f7f9',
@@ -345,7 +271,7 @@ theme: {
 ```
 ##### theme.screens
 
-screens配置的属性名就是生成响应式变体的前缀及@screen便捷媒体查询的参数。属性值则有一下几种配法：
+screens配置的属性名就是@screen便捷媒体查询的参数。属性值则有一下几种配法：
 ```js
 // riacss.config.js
 module.exports = {
@@ -584,10 +510,10 @@ style: {
     backgroundColor: (theme) => theme('colors.background'),
     /**
      * .border-${key} { border-width: ${value}}
-     * .border-t-${key} { border: 0, border-top-width: ${value}}
-     * .border-r-${key} { border: 0, border-right-width: ${value}}
-     * .border-b-${key} { border: 0, border-bottom-width: ${value}}
-     * .border-l-${key} { border: 0, border-left-width: ${value}}
+     * .border-t-${key} { border-top-width: ${value}}
+     * .border-r-${key} { border-right-width: ${value}}
+     * .border-b-${key} { border-bottom-width: ${value}}
+     * .border-l-${key} { border-left-width: ${value}}
      */
     borderWidth: {
         default: '1px',
@@ -635,105 +561,14 @@ style: {
 }
 ```
 
-#### variants
-
-variants则是生成变体的配置，当variants设为一个对象时，属性应与style配置中的属性保持一致，属性值为需要开启变体的数组如`['responsive', 'hover']`表示开启hover变体与响应式变体，支持的变体目前有：responsive，hover，focus，active，visited，disabled，first（first-child），last（last-child），odd（nth-child（odd）），even（nth-child（even））。伪类变体在配置数组中的顺序就是实际插入到css文件中的顺序。
-
-可以为所有的工具类设置一样的变体：
-```js
-// riacss.config.js
-module.exports  = {
-    variants: ['responsive', 'hover', 'first', 'odd', 'event']
-}
-```
-指定工具类不启用变体：
-```js
-// riacss.config.js
-module.exports  = {
-    variants: {
-        // 配置空数组即可关闭overflow相关工具类的变体功能
-        overflow: []
-    }
-}
-```
-还可以通过特殊的default变体控制原始工具类相对于变体的生成位置，默认原始工具类会在所有变体之前：
-```js
-// riacss.config.js
-module.exports = {
-    variants: {
-        backgroundColor: ['hover', 'default', 'focus'],
-    },
-}
-```
-```css
-/* 生成的 CSS */
-
-.hover\:bg-black:hover { background-color: #000 }
-.hover\:bg-white:hover { background-color: #fff }
-/* ... */
-
-.bg-black { background-color: #000 }
-.bg-white { background-color: #fff }
-/* ... */
-
-.focus\:bg-black:focus { background-color: #000 }
-.focus\:bg-white:focus { background-color: #fff }
-/* ... */
-```
-默认配置为：
-```js
-variants: {
-    display: ['responsive'],
-    overflow: ['responsive'],
-    position: ['responsive'],
-    positionSpacing: ['responsive'],
-    visibility: ['responsive'],
-    zIndex: ['responsive'],
-    flex: ['responsive'],
-    flexDirection: ['responsive'],
-    flexWrap: ['responsive'],
-    flexShrink: ['responsive'],
-    flexGrow: ['responsive'],
-    alignItems: ['responsive'],
-    alignContent: ['responsive'],
-    justifyContent: ['responsive'],
-    alignSelf: ['responsive'],
-    order: ['responsive'],
-    margin: ['responsive'],
-    padding: ['responsive'],
-    width: ['responsive'],
-    height: ['responsive'],
-    fontSize: ['responsive'],
-    fontWeight: ['responsive'],
-    lineHeight: ['responsive'],
-    textAlign: ['responsive'],
-    verticalAlign: ['responsive'],
-    whitespace: ['responsive'],
-    overflowWrap: ['responsive'],
-    wordBreak: ['responsive'],
-    color: ['responsive', 'hover'],
-    backgroundAttachment: ['responsive'],
-    backgroundPosition: ['responsive'],
-    backgroundRepeat: ['responsive'],
-    backgroundSize: ['responsive'],
-    backgroundColor: ['responsive', 'hover'],
-    borderWidth: ['responsive', 'hover'],
-    borderColor: ['responsive', 'hover'],
-    borderStyle: ['responsive'],
-    borderRadius: ['responsive'],
-    cursor: ['responsive'],
-    outline: ['responsive'],
-    resize: ['responsive'],
-},
-```
 #### plugins
 
-plugins是用于自定义工具类与变体的插件，默认为空数组
+plugins是用于自定义工具类的插件，默认为空数组
 ```js
 // riacss.config.js
 module.exports = {
     plugins: [
-        function({ addUtilities, addVariant, escape, config, style, variants }) {
+        function({ addUtilities, escape, config, style }) {
             // 自定义插件内容
         },
     ]
@@ -741,15 +576,11 @@ module.exports = {
 ```
 `addUtilities()`用于添加自定义工具类
 
-`addVariant()`用于添加自定义变体
-
 `escape()`用于转义要在类名中使用的字符串
 
 `config()`用于获取配置文件的信息如config('theme.screens')
 
 `style()`用于获取配置文件里style的信息如style('display')
-
-`variants()`用于获取配置文件里variants的信息如variants('position')，获取变体的配置应始终用variants方法，不能用config方法
 
 ##### 自定义工具类
 
@@ -773,7 +604,7 @@ module.exports = {
                 },
             }
 
-            addUtilities(newUtilities, ['responsive', 'hover'])
+            addUtilities(newUtilities)
         }
     ]
 }
@@ -781,542 +612,3 @@ module.exports = {
 addUtilities第一个参数是你自定义的工具类的样式对象，遵循CSS-in-JS的语法，也支持类似Sass的嵌套用法。也可以是样式对象的数组
 
 addUtilities第二个参数是变体的配置
-
-##### 自定义变体
-
-以disabled伪类变体为例：
-```js
-// riacss.config.js
-module.exports = {
-    plugins: [
-        function({ addVariant, escape }) {
-            addVariant('disabled', ({ modifySelectors, separator }) => {
-                modifySelectors(({ className }) => {
-                    return `.${escape(`disabled${separator}${className}`)}:disabled`
-                })
-            })
-        }
-    ]
-}
-```
-addVariant第一个参数是变体的名字，可用于variants配置中
-
-addVariant第二个参数是变体的生成方法，modifySelectors用于将工具类名变为变体形式，separator是配置中的分隔符
-
-### 原理
-
-现在以textAlign工具类及['responsive', 'hover']的变体配置为例阐述本插件的执行过程：
-```css
-/* 原始css文件 */
-
-.description {
-    @apply text-left;
-}
-@screen lg {
-    .description {
-        @apply text-right;
-    }
-}
-@riacss utilities
-```
-第一步：找到@riacss utilities atRule并替换为包含工具类的@variants resposive, hover atRule
-```css
-.description {
-    @apply text-left;
-}
-@screen lg {
-    .description {
-        @apply text-right;
-    }
-}
-@variants responsive, hover {
-    .text-left {
-        text-align: left
-    }
-
-    .text-center {
-        text-align: center
-    }
-
-    .text-right {
-        text-align: right
-    }
-
-    .text-baseline {
-        text-align: baseline
-    }
-}
-```
-第二步: 将@variants resposive, hover atRule转换为包含工具类和hover变体的@responsive atRule
-```css
-.description {
-    @apply text-left;
-}
-@screen lg {
-    .description {
-        @apply text-right;
-    }
-}
-@responsive {
-    .text-left {
-        text-align: left
-    }
-    .text-center {
-        text-align: center
-    }
-    .text-right {
-        text-align: right
-    }
-    .text-baseline {
-        text-align: baseline
-    }
-    .hover\:text-left:hover {
-        text-align: left
-    }
-    .hover\:text-center:hover {
-        text-align: center
-    }
-    .hover\:text-right:hover {
-        text-align: right
-    }
-    .hover\:text-baseline:hover {
-        text-align: baseline
-    }
-}
-```
-第三步: 将@responsive atRule转换为工具类、hover变体以及响应式变体（即相应的媒体查询样式）
-```css
-.description {
-    @apply text-left;
-}
-@screen lg {
-    .description {
-        @apply text-right;
-    }
-}
-.text-left {
-    text-align: left
-}
-.text-center {
-    text-align: center
-}
-.text-right {
-    text-align: right
-}
-.text-baseline {
-    text-align: baseline
-}
-.hover\:text-left:hover {
-    text-align: left
-}
-.hover\:text-center:hover {
-    text-align: center
-}
-.hover\:text-right:hover {
-    text-align: right
-}
-.hover\:text-baseline:hover {
-    text-align: baseline
-}
-@media (min-width: 640px) {
-    .sm\:text-left {
-        text-align: left
-    }
-    .sm\:text-center {
-        text-align: center
-    }
-    .sm\:text-right {
-        text-align: right
-    }
-    .sm\:text-baseline {
-        text-align: baseline
-    }
-    .sm\:hover\:text-left:hover {
-        text-align: left
-    }
-    .sm\:hover\:text-center:hover {
-        text-align: center
-    }
-    .sm\:hover\:text-right:hover {
-        text-align: right
-    }
-    .sm\:hover\:text-baseline:hover {
-        text-align: baseline
-    }
-}
-@media (min-width: 768px) {
-    .md\:text-left {
-        text-align: left
-    }
-    .md\:text-center {
-        text-align: center
-    }
-    .md\:text-right {
-        text-align: right
-    }
-    .md\:text-baseline {
-        text-align: baseline
-    }
-    .md\:hover\:text-left:hover {
-        text-align: left
-    }
-    .md\:hover\:text-center:hover {
-        text-align: center
-    }
-    .md\:hover\:text-right:hover {
-        text-align: right
-    }
-    .md\:hover\:text-baseline:hover {
-        text-align: baseline
-    }
-}
-@media (min-width: 1024px) {
-    .lg\:text-left {
-        text-align: left
-    }
-    .lg\:text-center {
-        text-align: center
-    }
-    .lg\:text-right {
-        text-align: right
-    }
-    .lg\:text-baseline {
-        text-align: baseline
-    }
-    .lg\:hover\:text-left:hover {
-        text-align: left
-    }
-    .lg\:hover\:text-center:hover {
-        text-align: center
-    }
-    .lg\:hover\:text-right:hover {
-        text-align: right
-    }
-    .lg\:hover\:text-baseline:hover {
-        text-align: baseline
-    }
-}
-@media (min-width: 1280px) {
-    .xl\:text-left {
-        text-align: left
-    }
-    .xl\:text-center {
-        text-align: center
-    }
-    .xl\:text-right {
-        text-align: right
-    }
-    .xl\:text-baseline {
-        text-align: baseline
-    }
-    .xl\:hover\:text-left:hover {
-        text-align: left
-    }
-    .xl\:hover\:text-center:hover {
-        text-align: center
-    }
-    .xl\:hover\:text-right:hover {
-        text-align: right
-    }
-    .xl\:hover\:text-baseline:hover {
-        text-align: baseline
-    }
-}
-```
-第四步：将@screen lg atRule转换为对应的@media atRule
-```css
-.description {
-    @apply text-left;
-}
-@media (min-width: 1024px) {
-    .description {
-        @apply text-right;
-    }
-}
-.text-left {
-    text-align: left
-}
-.text-center {
-    text-align: center
-}
-.text-right {
-    text-align: right
-}
-.text-baseline {
-    text-align: baseline
-}
-.hover\:text-left:hover {
-    text-align: left
-}
-.hover\:text-center:hover {
-    text-align: center
-}
-.hover\:text-right:hover {
-    text-align: right
-}
-.hover\:text-baseline:hover {
-    text-align: baseline
-}
-@media (min-width: 640px) {
-    .sm\:text-left {
-        text-align: left
-    }
-    .sm\:text-center {
-        text-align: center
-    }
-    .sm\:text-right {
-        text-align: right
-    }
-    .sm\:text-baseline {
-        text-align: baseline
-    }
-    .sm\:hover\:text-left:hover {
-        text-align: left
-    }
-    .sm\:hover\:text-center:hover {
-        text-align: center
-    }
-    .sm\:hover\:text-right:hover {
-        text-align: right
-    }
-    .sm\:hover\:text-baseline:hover {
-        text-align: baseline
-    }
-}
-@media (min-width: 768px) {
-    .md\:text-left {
-        text-align: left
-    }
-    .md\:text-center {
-        text-align: center
-    }
-    .md\:text-right {
-        text-align: right
-    }
-    .md\:text-baseline {
-        text-align: baseline
-    }
-    .md\:hover\:text-left:hover {
-        text-align: left
-    }
-    .md\:hover\:text-center:hover {
-        text-align: center
-    }
-    .md\:hover\:text-right:hover {
-        text-align: right
-    }
-    .md\:hover\:text-baseline:hover {
-        text-align: baseline
-    }
-}
-@media (min-width: 1024px) {
-    .lg\:text-left {
-        text-align: left
-    }
-    .lg\:text-center {
-        text-align: center
-    }
-    .lg\:text-right {
-        text-align: right
-    }
-    .lg\:text-baseline {
-        text-align: baseline
-    }
-    .lg\:hover\:text-left:hover {
-        text-align: left
-    }
-    .lg\:hover\:text-center:hover {
-        text-align: center
-    }
-    .lg\:hover\:text-right:hover {
-        text-align: right
-    }
-    .lg\:hover\:text-baseline:hover {
-        text-align: baseline
-    }
-}
-@media (min-width: 1280px) {
-    .xl\:text-left {
-        text-align: left
-    }
-    .xl\:text-center {
-        text-align: center
-    }
-    .xl\:text-right {
-        text-align: right
-    }
-    .xl\:text-baseline {
-        text-align: baseline
-    }
-    .xl\:hover\:text-left:hover {
-        text-align: left
-    }
-    .xl\:hover\:text-center:hover {
-        text-align: center
-    }
-    .xl\:hover\:text-right:hover {
-        text-align: right
-    }
-    .xl\:hover\:text-baseline:hover {
-        text-align: baseline
-    }
-}
-```
-第五步：将@apply atRule转换为对应的declaration
-```css
-.description {
-    text-align: left;
-}
-@media (min-width: 1024px) {
-    .description {
-        text-align: right;
-    }
-}
-.text-left {
-    text-align: left
-}
-.text-center {
-    text-align: center
-}
-.text-right {
-    text-align: right
-}
-.text-baseline {
-    text-align: baseline
-}
-.hover\:text-left:hover {
-    text-align: left
-}
-.hover\:text-center:hover {
-    text-align: center
-}
-.hover\:text-right:hover {
-    text-align: right
-}
-.hover\:text-baseline:hover {
-    text-align: baseline
-}
-@media (min-width: 640px) {
-    .sm\:text-left {
-        text-align: left
-    }
-    .sm\:text-center {
-        text-align: center
-    }
-    .sm\:text-right {
-        text-align: right
-    }
-    .sm\:text-baseline {
-        text-align: baseline
-    }
-    .sm\:hover\:text-left:hover {
-        text-align: left
-    }
-    .sm\:hover\:text-center:hover {
-        text-align: center
-    }
-    .sm\:hover\:text-right:hover {
-        text-align: right
-    }
-    .sm\:hover\:text-baseline:hover {
-        text-align: baseline
-    }
-}
-@media (min-width: 768px) {
-    .md\:text-left {
-        text-align: left
-    }
-    .md\:text-center {
-        text-align: center
-    }
-    .md\:text-right {
-        text-align: right
-    }
-    .md\:text-baseline {
-        text-align: baseline
-    }
-    .md\:hover\:text-left:hover {
-        text-align: left
-    }
-    .md\:hover\:text-center:hover {
-        text-align: center
-    }
-    .md\:hover\:text-right:hover {
-        text-align: right
-    }
-    .md\:hover\:text-baseline:hover {
-        text-align: baseline
-    }
-}
-@media (min-width: 1024px) {
-    .lg\:text-left {
-        text-align: left
-    }
-    .lg\:text-center {
-        text-align: center
-    }
-    .lg\:text-right {
-        text-align: right
-    }
-    .lg\:text-baseline {
-        text-align: baseline
-    }
-    .lg\:hover\:text-left:hover {
-        text-align: left
-    }
-    .lg\:hover\:text-center:hover {
-        text-align: center
-    }
-    .lg\:hover\:text-right:hover {
-        text-align: right
-    }
-    .lg\:hover\:text-baseline:hover {
-        text-align: baseline
-    }
-}
-@media (min-width: 1280px) {
-    .xl\:text-left {
-        text-align: left
-    }
-    .xl\:text-center {
-        text-align: center
-    }
-    .xl\:text-right {
-        text-align: right
-    }
-    .xl\:text-baseline {
-        text-align: baseline
-    }
-    .xl\:hover\:text-left:hover {
-        text-align: left
-    }
-    .xl\:hover\:text-center:hover {
-        text-align: center
-    }
-    .xl\:hover\:text-right:hover {
-        text-align: right
-    }
-    .xl\:hover\:text-baseline:hover {
-        text-align: baseline
-    }
-}
-```
-若配置并开启了purge并且项目中只使用了text-left和md:text-center则最后一步去除没有用到的css，最终css样式为：
-```css
-.description {
-    text-align: left;
-}
-@media (min-width: 1024px) {
-    .description {
-        text-align: right;
-    }
-}
-.text-left {
-    text-align: left;
-}
-@media (min-width: 768px) {
-    .md\:text-center {
-        text-align: center;
-    }
-}
-```

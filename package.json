@@ -1,7 +1,7 @@
 {
   "name": "postcss-tiger-ria",
-  "version": "0.0.3",
-  "description": "A utility-first CSS framework for rapidly building custom user interfaces like tailwindcss",
+  "version": "0.0.4",
+  "description": "A utility-first CSS framework",
   "keywords": [
     "postcss",
     "css",
@@ -17,8 +17,6 @@
   "license": "MIT",
   "repository": "Charles Hang/postcss-tiger-ria",
   "dependencies": {
-    "@fullhuman/postcss-purgecss": "^2.2.0",
-    "chalk": "^4.0.0",
     "lodash": "^4.17.15",
     "postcss": "^7.0.18",
     "postcss-js": "^2.0.3",

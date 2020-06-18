@@ -1,6 +1,4 @@
 const defaultConfig = {
-    purge: [],
-    separator: ':',
     theme: {
         screens: {
             sm: '640px',
@@ -22,6 +20,7 @@ const defaultConfig = {
                 red: '#ff8080',
                 purple: '#9e63f0',
                 yellow: '#ffba1a',
+                white: '#fff',
             },
             background: {
                 transparent: 'transparent',
@@ -33,6 +32,7 @@ const defaultConfig = {
                 red: '#ffefef',
                 purple: '#f4f0fd',
                 yellow: '#fff6e4',
+                white: '#fff',
             },
             border: {
                 gray: '#f5f7f9',
@@ -106,14 +106,12 @@ const defaultConfig = {
             visible: 'visible',
             scroll: 'scroll',
         },
-        // 对比旧的css tool减少sticky
         position: {
             static: 'static',
             relative: 'relative',
             absolute: 'absolute',
             fixed: 'fixed',
         },
-        // top/right/bottom/left
         positionSpacing: {
             0: '0',
         },
@@ -122,7 +120,6 @@ const defaultConfig = {
             invisible: 'hidden',
         },
         zIndex: (theme) => theme('size.zIndex'),
-        // 对比旧的css tool新增1
         flex: {
             1: '1 1 0%',
             auto: '1 1 auto',
@@ -181,15 +178,12 @@ const defaultConfig = {
             first: '-9999',
             last: '9999',
         },
-        // 对比旧的css tool，每个都有auto不单是x
         margin: (theme) => ({
             auto: 'auto',
             ...theme('spacing.marginPadding'),
         }),
         padding: (theme) => theme('spacing.marginPadding'),
-        // 对比旧的css tool，多了auto，32，64
         width: (theme) => theme('spacing.content'),
-        // 对比旧的css tool，多了auto
         height: (theme) => theme('spacing.content'),
         fontSize: (theme) => theme('size.font'),
         fontWeight: {
@@ -236,7 +230,6 @@ const defaultConfig = {
         backgroundRepeat: {
             'no-repeat': 'no-repeat',
         },
-        // 对比旧css tool，多了full, full-auto
         backgroundSize: {
             auto: 'auto',
             cover: 'cover',
@@ -274,49 +267,6 @@ const defaultConfig = {
             default: 'both',
             none: 'none',
         },
-    },
-    variants: {
-        display: ['responsive'],
-        overflow: ['responsive'],
-        position: ['responsive'],
-        positionSpacing: ['responsive'],
-        visibility: ['responsive'],
-        zIndex: ['responsive'],
-        flex: ['responsive'],
-        flexDirection: ['responsive'],
-        flexWrap: ['responsive'],
-        flexShrink: ['responsive'],
-        flexGrow: ['responsive'],
-        alignItems: ['responsive'],
-        alignContent: ['responsive'],
-        justifyContent: ['responsive'],
-        alignSelf: ['responsive'],
-        order: ['responsive'],
-        margin: ['responsive'],
-        padding: ['responsive'],
-        width: ['responsive'],
-        height: ['responsive'],
-        fontSize: ['responsive'],
-        fontWeight: ['responsive'],
-        lineHeight: ['responsive'],
-        textAlign: ['responsive'],
-        verticalAlign: ['responsive'],
-        whitespace: ['responsive'],
-        overflowWrap: ['responsive'],
-        wordBreak: ['responsive'],
-        color: ['responsive', 'hover'],
-        backgroundAttachment: ['responsive'],
-        backgroundPosition: ['responsive'],
-        backgroundRepeat: ['responsive'],
-        backgroundSize: ['responsive'],
-        backgroundColor: ['responsive', 'hover'],
-        borderWidth: ['responsive', 'hover'],
-        borderColor: ['responsive', 'hover'],
-        borderStyle: ['responsive'],
-        borderRadius: ['responsive'],
-        cursor: ['responsive'],
-        outline: ['responsive'],
-        resize: ['responsive'],
     },
     plugins: [],
 };

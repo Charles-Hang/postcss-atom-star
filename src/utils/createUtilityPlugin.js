@@ -21,7 +21,7 @@ export function className(classPrefix, key, defaultPrefix) {
 
 export default function createUtilityPlugin(styleKey, utilityVariations) {
     return function utilityPlugin({
-        escape, addUtilities, variants, style,
+        escape, addUtilities, style,
     }) {
         const utilities = utilityVariations.map(
             ([classPrefix, properties, transformValue = identity]) => fromPairs(
@@ -34,6 +34,6 @@ export default function createUtilityPlugin(styleKey, utilityVariations) {
             ),
         );
 
-        return addUtilities(utilities, variants(styleKey));
+        return addUtilities(utilities);
     };
 }

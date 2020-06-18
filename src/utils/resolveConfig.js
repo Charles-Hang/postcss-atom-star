@@ -83,32 +83,12 @@ function resolveConfigStyle(configs, theme) {
     }), {});
 }
 
-function resolveConfigVariants(configs) {
-    const roughConfig = configs.reduce((merged, c) => ({
-        ...merged,
-        ...c,
-    }), {});
-
-    if (Array.isArray(roughConfig.variants)) {
-        return roughConfig.variants;
-    }
-
-    return configs
-        .map((c) => _.get(c, 'variants', {}))
-        .reduce((merged, v) => ({
-            ...merged,
-            ...v,
-        }), {});
-}
-
 export default function resolveConfig(configs) {
     const theme = resolveConfigTheme(configs);
     const style = resolveConfigStyle(configs, theme);
-    const variants = resolveConfigVariants(configs);
 
     return Object.assign({}, ...configs, {
         theme,
         style,
-        variants,
     });
 }

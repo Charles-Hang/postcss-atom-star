@@ -2,8 +2,6 @@ import _ from 'lodash';
 import Node from 'postcss/lib/node';
 import escapeClassName from './escapeClassName';
 import parseObjectStyles from './parseObjectStyles';
-import wrapWithVariants from './wrapWithVariants';
-import generateVariantFunction from './generateVariantFunction';
 
 function parseStyles(styles) {
     if (!Array.isArray(styles)) {
@@ -15,7 +13,6 @@ function parseStyles(styles) {
 
 export default function (plugins, config) {
     const parsedUtilities = [];
-    const variantGenerators = {};
 
     const getConfigValue = (path, defaultValue) => _.get(config, path, defaultValue);
 
@@ -23,31 +20,22 @@ export default function (plugins, config) {
         plugin({
             config: getConfigValue,
             style: (path, defaultValue) => getConfigValue(`style.${path}`, defaultValue),
-            variants: (path, defaultValue) => {
-                if (Array.isArray(config.variants)) {
-                    return config.variants;
-                }
-
-                return getConfigValue(`variants.${path}`, defaultValue);
-            },
             escape: escapeClassName,
-            addUtilities: (utilities, variants = []) => {
+            addUtilities: (utilities) => {
                 const rules = parseStyles(utilities);
 
                 if (!rules.length) {
                     return;
                 }
 
-                parsedUtilities.push(wrapWithVariants(rules, variants));
-            },
-            addVariant: (name, generator) => {
-                variantGenerators[name] = generateVariantFunction(generator);
+                parsedUtilities.push(rules);
             },
         });
     });
 
+    const utilities = _.flatMap(parsedUtilities);
+
     return {
-        utilities: parsedUtilities,
-        variantGenerators,
+        utilities,
     };
 }

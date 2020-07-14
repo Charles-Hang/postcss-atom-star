@@ -10,6 +10,7 @@ export default function (pluginConfig) {
             'white-space': 'nowrap',
         },
     }, []);
-    createUtilityPlugin('overflowWrap', [['', ['overflow-wrap']]])(pluginConfig);
+    // word-wrap是ie兼容
+    createUtilityPlugin('overflowWrap', [['', ['overflow-wrap', 'word-wrap']]])(pluginConfig);
     createUtilityPlugin('wordBreak', [['', ['word-break']]])(pluginConfig);
 }

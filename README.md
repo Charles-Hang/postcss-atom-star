@@ -183,26 +183,24 @@ screens配置的属性名就是@screen便捷媒体查询的参数。属性值则
 ```js
 // riacss.config.js
 module.exports = {
-    theme: {
-        screens: {
-            'sm': '640px',
-            // => @media (min-width: 640px) { ... }
+    screens: {
+        'sm': '640px',
+        // => @media (min-width: 640px) { ... }
 
-            'md': {'min': '768px', 'max': '1023px'},
-            // => @media (min-width: 768px) and (max-width: 1023px) { ... }
+        'md': {'min': '768px', 'max': '1023px'},
+        // => @media (min-width: 768px) and (max-width: 1023px) { ... }
 
-            'lg': {'max': '1024px'},
-            // => @media (max-width: 1024px) { ... }
+        'lg': {'max': '1024px'},
+        // => @media (max-width: 1024px) { ... }
 
-            'xl': [
-                {'min': '1200px', 'max': '1400px'},
-                {'min': '1500px'}
-            ],
-            // => @media (min-width: 1200px) and (max-width: 1400px), (min-width: 1500px) { ... }
+        'xl': [
+            {'min': '1200px', 'max': '1400px'},
+            {'min': '1500px'}
+        ],
+        // => @media (min-width: 1200px) and (max-width: 1400px), (min-width: 1500px) { ... }
 
-            'portrait': {'raw': '(orientation: portrait)'},
-            // => @media (orientation: portrait) { ... }
-        }
+        'portrait': {'raw': '(orientation: portrait)'},
+        // => @media (orientation: portrait) { ... }
     }
 }
 ```

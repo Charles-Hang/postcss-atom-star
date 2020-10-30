@@ -5,6 +5,7 @@ import plugins from './plugins';
 import substituteRiacssAtRules from './lib/substituteRiacssAtRules';
 import substituteScreenAtRules from './lib/substituteScreenAtRules';
 import substituteClassApplyAtRules from './lib/substituteClassApplyAtRules';
+import evaluateRiacssFunctions from './lib/evaluateRiacssFunctions';
 
 
 export default function (getConfig) {
@@ -14,6 +15,7 @@ export default function (getConfig) {
 
         return postcss([
             substituteRiacssAtRules(processedPlugins.utilities),
+            evaluateRiacssFunctions(config),
             substituteScreenAtRules(config),
             substituteClassApplyAtRules(processedPlugins.utilities),
         ]).process(css, { from: _.get(css, 'source.input.file') });

@@ -1,6 +1,6 @@
 {
   "name": "postcss-tiger-ria",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "A utility-first CSS framework",
   "keywords": [
     "postcss",
@@ -19,6 +19,7 @@
   "dependencies": {
     "lodash": "^4.17.15",
     "postcss": "^7.0.18",
+    "postcss-functions": "^3.0.0",
     "postcss-js": "^2.0.3",
     "postcss-nested": "^4.2.1",
     "postcss-selector-parser": "^6.0.2"

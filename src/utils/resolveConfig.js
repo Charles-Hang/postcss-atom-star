@@ -1,5 +1,26 @@
 import _ from 'lodash';
 
+function resolveFunctionKeys(object, theme) {
+    function themeGetter(pathStr, defaultValue) {
+        const path = _.toPath(pathStr);
+        let index = 0;
+        let val = theme;
+
+        while (val !== undefined && val !== null && index < path.length) {
+            val = val[path[index]];
+            val = _.isFunction(val) ? val(themeGetter) : val;
+            index += 1;
+        }
+
+        return val === undefined ? defaultValue : val;
+    }
+
+    return Object.keys(object).reduce((resolved, key) => ({
+        ...resolved,
+        [key]: _.isFunction(object[key]) ? object[key](themeGetter) : object[key],
+    }), {});
+}
+
 function mergeWithExtendProps(merged, extend) {
     return _.mergeWith(merged, extend, (mergedValue, extendValue) => {
         if (_.isUndefined(mergedValue)) {
@@ -52,24 +73,12 @@ function mergeExtends(theme, extend) {
 function resolveConfigTheme(configs) {
     const themes = configs.map((config) => _.get(config, 'theme', {}));
     const { extend, ...mergedTheme } = mergeThemes(themes);
+    const theme = mergeExtends(mergedTheme, extend);
 
-    return mergeExtends(mergedTheme, extend);
+    return resolveFunctionKeys(theme, theme);
 }
 
 function resolveConfigStyle(configs, theme) {
-    function themeGetter(pathStr, defaultValue) {
-        const path = _.toPath(pathStr);
-        let index = 0;
-        let val = theme;
-
-        while (val !== undefined && val !== null && index < path.length) {
-            val = val[path[index]];
-            val = _.isFunction(val) ? val(themeGetter) : val;
-            index += 1;
-        }
-
-        return val === undefined ? defaultValue : val;
-    }
     const style = configs
         .map((config) => _.get(config, 'style', {}))
         .reduce((merged, s) => ({
@@ -77,10 +86,7 @@ function resolveConfigStyle(configs, theme) {
             ...s,
         }));
 
-    return Object.keys(style).reduce((resolved, key) => ({
-        ...resolved,
-        [key]: _.isFunction(style[key]) ? style[key](themeGetter) : style[key],
-    }), {});
+    return resolveFunctionKeys(style, theme);
 }
 
 export default function resolveConfig(configs) {

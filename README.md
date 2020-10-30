@@ -13,10 +13,11 @@
         - [基本使用](#基本使用)
             - [工具类](#工具类)
             - [@apply](#apply)
+            - [theme()](#theme)
             - [@screen](#screen)
         - [配置](#配置)
+            - [screens](#screens)
             - [theme](#theme)
-                - [theme.screens](#themescreens)
             - [style](#style)
             - [plugins](#plugins)
                 - [自定义工具类](#自定义工具类)
@@ -33,7 +34,7 @@ npm i -D postcss-tiger-ria
 // example postcss.config.js
 module.exports = {
     plugins: [
-+   require('postcss-tiger-ria'),
++       require('postcss-tiger-ria'),
         require('autoprefixer')
     ]
 }
@@ -99,6 +100,15 @@ vscode下提供了补全提示插件[ria css autocomplete vscode]
 ```
 不支持!important的功能
 
+#### theme()
+
+当@apply不能满足开发需求时，可以使用theme()方法调用配置文件中theme里配置的变量：
+```css
+.btn {
+    background: theme('colors.gray.light');
+}
+```
+
 #### @screen
 
 提供了一种便捷的响应式媒体查询使用方式：
@@ -121,7 +131,7 @@ vscode下提供了补全提示插件[ria css autocomplete vscode]
     /* custom css */
 }
 ```
-md为配置文件中theme.screens中的项，(min-width: 640px)为md的配置，配置相关的说明后面会具体再说
+md为配置文件中screens中的项，(min-width: 640px)为md的配置，配置相关的说明后面会具体再说
 
 ### 配置
 
@@ -137,32 +147,29 @@ module.exports = {
 ```js
 // 举例，你的配置文件
 module.exports = {
+    screens: {
+        sm: '640px',
+        md: '768px',
+        lg: '1024px',
+        xl: '1280px',
+    },
     theme: {
-        screens: {
-            sm: '640px',
-            md: '768px',
-            lg: '1024px',
-            xl: '1280px',
-        },
         extend: {
             colors: {
                 font: {
                     cyan: '#9cdbff',
                 },
             },
-            screens: {
-                xxl: '1400px',
-            },
         },
     },
     style: {
         display: {
-        hidden: 'none',
-        block: 'block',
-        'inline-block': 'inline-block',
-        inline: 'inline',
-        flex: 'flex',
-        'inline-flex': 'inline-flex',
+            hidden: 'none',
+            block: 'block',
+            'inline-block': 'inline-block',
+            inline: 'inline',
+            flex: 'flex',
+            'inline-flex': 'inline-flex',
         },
         zIndex: (theme) => theme('size.zIndex'),
     },
@@ -170,19 +177,59 @@ module.exports = {
 }
 ```
 
+#### screens
+
+screens配置的属性名就是@screen便捷媒体查询的参数。属性值则有以下几种配法：
+```js
+// riacss.config.js
+module.exports = {
+    theme: {
+        screens: {
+            'sm': '640px',
+            // => @media (min-width: 640px) { ... }
+
+            'md': {'min': '768px', 'max': '1023px'},
+            // => @media (min-width: 768px) and (max-width: 1023px) { ... }
+
+            'lg': {'max': '1024px'},
+            // => @media (max-width: 1024px) { ... }
+
+            'xl': [
+                {'min': '1200px', 'max': '1400px'},
+                {'min': '1500px'}
+            ],
+            // => @media (min-width: 1200px) and (max-width: 1400px), (min-width: 1500px) { ... }
+
+            'portrait': {'raw': '(orientation: portrait)'},
+            // => @media (orientation: portrait) { ... }
+        }
+    }
+}
+```
+
 #### theme
 
-theme是生成工具类用到的定制主题，theme的属性的定义会直接覆盖默认配置，如果只是想拓展而不是覆盖则使用extend来配置即可，如上面的例子，theme中除了screens的结构不可变外（用于配合@screen的使用），其他的可随意配置
+theme是要用到的定制主题，theme的属性的定义会直接覆盖默认配置，如果只是想拓展而不是覆盖则使用extend来配置即可，如上面的例子。theme可随意配置，theme配置的属性既可以是对象也可以是方法，这个方法可以获取自身的配置，如下：
+```js
+theme: {
+    colors: {
+        gray: {
+            default: '#9da6c3',
+            light: '#c4cadb',
+        }
+    },
+    fontColors: theme => ({
+        gray: theme('colors.gray.default')
+    }),
+    backgroundColors: theme => ({
+        gray: theme('colors.gray.light')
+    })
+}
+```
 
 默认配置为：
 ```js
 theme: {
-    screens: {
-        sm: '640px',
-        md: '768px',
-        lg: '1024px',
-        xl: '1280px',
-    },
     colors: {
         font: {
             // 主题色
@@ -269,39 +316,10 @@ theme: {
     },
 },
 ```
-##### theme.screens
-
-screens配置的属性名就是@screen便捷媒体查询的参数。属性值则有一下几种配法：
-```js
-// riacss.config.js
-module.exports = {
-    theme: {
-        screens: {
-            'sm': '640px',
-            // => @media (min-width: 640px) { ... }
-
-            'md': {'min': '768px', 'max': '1023px'},
-            // => @media (min-width: 768px) and (max-width: 1023px) { ... }
-
-            'lg': {'max': '1024px'},
-            // => @media (max-width: 1024px) { ... }
-
-            'xl': [
-                {'min': '1200px', 'max': '1400px'},
-                {'min': '1500px'}
-            ],
-            // => @media (min-width: 1200px) and (max-width: 1400px), (min-width: 1500px) { ... }
-
-            'portrait': {'raw': '(orientation: portrait)'},
-            // => @media (orientation: portrait) { ... }
-        }
-    }
-}
-```
 
 #### style
 
-style是生成工具类的具体定义，style对象里的键名不可更改，只可配置属性值。style里的属性值既可以是对象也可以是个方法，方法的参数就是用于获取theme配置的方法，如上面的例子。所以可以看出theme是服务于style的，工具类的生成上按一定的规则，key拼在类名中，key为`default`时表示不拼接，若就想拼default则使用`-default`代替，value拼在属性中，下面是默认的配置说明
+style是生成工具类的具体定义，style对象里的键名不可更改，只可配置属性值。style里的属性值既可以是对象也可以是个方法，方法的参数就是用于获取theme配置的方法，如上面的例子。工具类的生成上按一定的规则，key拼在类名中，key为`default`时表示不拼接，若就想拼default则使用`-default`代替，value拼在属性中，下面是默认的配置说明
 ```js
 // 默认的style配置
 style: {
@@ -441,6 +459,26 @@ style: {
     width: (theme) => theme('spacing.content'),
     // .h-${key} { height: ${value}}
     height: (theme) => theme('spacing.content'),
+    // .min-w-${key} { min-width: ${value}}
+    minWidth: {
+        0: '0',
+        full: '100%',
+    },
+    // .min-h-${key} { min-height: ${value}}
+    minHeight: {
+        0: '0',
+        full: '100%',
+    },
+    // .max-w-${key} { max-width: ${value}}
+    maxWidth: {
+        0: '0',
+        full: '100%',
+    },
+    // .max-h-${key} { max-height: ${value}}
+    maxHeight: {
+        0: '0',
+        full: '100%',
+    },
     // .font-${key} { font-size: ${value}}
     fontSize: (theme) => theme('size.font'),
     // .font-${key} { font-weight: ${value}}
@@ -578,7 +616,7 @@ module.exports = {
 
 `escape()`用于转义要在类名中使用的字符串
 
-`config()`用于获取配置文件的信息如config('theme.screens')
+`config()`用于获取配置文件的信息如config('theme.colors')
 
 `style()`用于获取配置文件里style的信息如style('display')
 
@@ -610,5 +648,3 @@ module.exports = {
 }
 ```
 addUtilities第一个参数是你自定义的工具类的样式对象，遵循CSS-in-JS的语法，也支持类似Sass的嵌套用法。也可以是样式对象的数组
-
-addUtilities第二个参数是变体的配置

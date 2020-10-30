@@ -1,11 +1,11 @@
 const defaultConfig = {
+    screens: {
+        sm: '640px',
+        md: '768px',
+        lg: '1024px',
+        xl: '1280px',
+    },
     theme: {
-        screens: {
-            sm: '640px',
-            md: '768px',
-            lg: '1024px',
-            xl: '1280px',
-        },
         colors: {
             font: {
                 // 主题色
@@ -185,6 +185,22 @@ const defaultConfig = {
         padding: (theme) => theme('spacing.marginPadding'),
         width: (theme) => theme('spacing.content'),
         height: (theme) => theme('spacing.content'),
+        minWidth: {
+            0: '0',
+            full: '100%',
+        },
+        minHeight: {
+            0: '0',
+            full: '100%',
+        },
+        maxWidth: {
+            0: '0',
+            full: '100%',
+        },
+        maxHeight: {
+            0: '0',
+            full: '100%',
+        },
         fontSize: (theme) => theme('size.font'),
         fontWeight: {
             normal: '400',

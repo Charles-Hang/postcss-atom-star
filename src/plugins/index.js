@@ -20,6 +20,10 @@ import border from './border';
 import cursor from './cursor';
 import outline from './outline';
 import resize from './resize';
+import minWidth from './minWidth';
+import minHeight from './minHeight';
+import maxWidth from './maxWidth';
+import maxHeight from './maxHeight';
 
 const plugins = [
     display,
@@ -44,6 +48,10 @@ const plugins = [
     cursor,
     outline,
     resize,
+    minWidth,
+    minHeight,
+    maxWidth,
+    maxHeight,
 ];
 
 export default plugins;

@@ -54,19 +54,14 @@ function mergeThemes(themes) {
 
 function mergeExtends(theme, extend) {
     return _.mergeWith(theme, extend, (themeValue, extendValue) => {
-        // 对于像theme.colors这样的属性，不能直接合并，应该合并其下的font，background之类
-        if (Object.values(themeValue).every((themeItem) => typeof themeItem === 'object')) {
-            const extendWithArrayProps = extendValue.reduce(
-                (merged, extendProp) => mergeWithExtendProps(merged, extendProp),
-                {},
-            );
-            return mergeExtends(themeValue, extendWithArrayProps);
+        if (!_.isFunction(themeValue) && !_.some(extendValue, _.isFunction)) {
+            return _.mergeWith({}, themeValue, ...extendValue);
         }
 
-        return {
-            ...themeValue,
-            ...Object.assign({}, ...extendValue),
-        };
+        return (themeGetter) => _.mergeWith(
+            {},
+            ...[themeValue, ...extendValue].map((e) => (_.isFunction(e) ? e(themeGetter) : e)),
+        );
     });
 }
 

@@ -18,7 +18,8 @@ module.exports = {
         "import/no-dynamic-require": "off",
         "global-require": "off",
         "no-param-reassign": "off",
-        "arrow-body-style": "off"
+        "arrow-body-style": "off",
+        "no-restricted-syntax": "off"
     },
     "ignorePatterns": ["lib/**/*.js"]
 };

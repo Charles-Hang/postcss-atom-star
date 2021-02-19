@@ -2,6 +2,7 @@ import postcss from 'postcss';
 import _ from 'lodash';
 import path from 'path';
 import fs from 'fs';
+import registerConfigAsDependency, { getModuleDependencies } from './lib/registerConfigAsDependency';
 import resolveConfig from './utils/resolveConfig';
 import { defaultConfig, defaultConfigPath } from './constants';
 import processTigerRia from './processTigerRia';
@@ -43,6 +44,11 @@ function getConfigFunction(configPath) {
             return resolveConfig([defaultConfig]);
         }
 
+        // 需要将配置文件缓存清除，否则改变配置后即使重新编译获取到的数据也是旧的
+        getModuleDependencies(configPath).forEach((mdl) => {
+            delete require.cache[require.resolve(mdl.file)];
+        });
+
         const config = require(configPath);
 
         return resolveConfig([defaultConfig, config]);
@@ -50,7 +56,16 @@ function getConfigFunction(configPath) {
 }
 
 module.exports = postcss.plugin('postcss-tiger-ria', (config) => {
+    const plugins = [];
     const configPath = resolveConfigPath(config);
 
-    return postcss([processTigerRia(getConfigFunction(configPath))]);
+    if (!_.isUndefined(configPath)) {
+        // 将配置文件注册为webpack依赖，改变配置后则重新编译
+        plugins.push(registerConfigAsDependency(configPath));
+    }
+
+    return postcss([
+        ...plugins,
+        processTigerRia(getConfigFunction(configPath)),
+    ]);
 });

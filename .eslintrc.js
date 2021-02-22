@@ -16,6 +16,7 @@ module.exports = {
     "rules": {
         "indent": ["error", 4],
         "import/no-dynamic-require": "off",
+        "import/no-extraneous-dependencies": "off",
         "global-require": "off",
         "no-param-reassign": "off",
         "arrow-body-style": "off",

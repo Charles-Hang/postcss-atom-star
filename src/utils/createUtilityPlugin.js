@@ -9,7 +9,7 @@ export function className(classPrefix, key, defaultPrefix) {
     }
 
     if (key === '-default') {
-        return `${classPrefix}-default`;
+        return `${classPrefix || defaultPrefix}-default`;
     }
 
     if (!classPrefix) {

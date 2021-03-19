@@ -1,34 +1,48 @@
-import postcss from 'postcss';
-import _ from 'lodash';
-import path from 'path';
-import fs from 'fs';
-import registerConfigAsDependency, { getModuleDependencies } from './lib/registerConfigAsDependency';
-import resolveConfig from './utils/resolveConfig';
-import { defaultConfig, defaultConfigPath } from './constants';
-import processTigerRia from './processTigerRia';
+import postcss from "postcss";
+import _ from "lodash";
+import path from "path";
+import fs from "fs";
+import registerConfigAsDependency, {
+    getModuleDependencies,
+} from "./lib/registerConfigAsDependency";
+import resolveConfig from "./utils/resolveConfig";
+import { defaultConfig, defaultConfigPath } from "./constants";
+import processAtomStar from "./processAtomStar";
 
 function resolveConfigPath(filePath) {
-    // require('postcss-tiger-ria')({ theme: ..., variants: ... })
-    if (_.isObject(filePath) && !_.has(filePath, 'config') && !_.isEmpty(filePath)) {
+    // require('postcss-atom-star')({ theme: ..., variants: ... })
+    if (
+        _.isObject(filePath) &&
+        !_.has(filePath, "config") &&
+        !_.isEmpty(filePath)
+    ) {
         return undefined;
     }
 
-    // require('postcss-tiger-ria')({ config: 'custom-config.js' })
-    if (_.isObject(filePath) && _.has(filePath, 'config') && _.isString(filePath.config)) {
+    // require('postcss-atom-star')({ config: 'custom-config.js' })
+    if (
+        _.isObject(filePath) &&
+        _.has(filePath, "config") &&
+        _.isString(filePath.config)
+    ) {
         return path.resolve(filePath.config);
     }
 
-    // require('postcss-tiger-ria')({ config: { theme: ..., variants: ... } })
-    if (_.isObject(filePath) && _.has(filePath, 'config') && _.isObject(filePath.config)) {
+    // require('postcss-atom-star')({ config: { theme: ..., variants: ... } })
+    if (
+        _.isObject(filePath) &&
+        _.has(filePath, "config") &&
+        _.isObject(filePath.config)
+    ) {
         return undefined;
     }
 
-    // require('postcss-tiger-ria')('custom-config.js')
+    // require('postcss-atom-star')('custom-config.js')
     if (_.isString(filePath)) {
         return path.resolve(filePath);
     }
 
-    // require('postcss-tiger-ria')
+    // require('postcss-atom-star')
     try {
         const configPath = path.resolve(defaultConfigPath);
         fs.accessSync(configPath);
@@ -55,7 +69,7 @@ function getConfigFunction(configPath) {
     };
 }
 
-module.exports = postcss.plugin('postcss-tiger-ria', (config) => {
+module.exports = postcss.plugin("postcss-atom-star", (config) => {
     const plugins = [];
     const configPath = resolveConfigPath(config);
 
@@ -66,6 +80,6 @@ module.exports = postcss.plugin('postcss-tiger-ria', (config) => {
 
     return postcss([
         ...plugins,
-        processTigerRia(getConfigFunction(configPath)),
+        processAtomStar(getConfigFunction(configPath)),
     ]);
 });

@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import functions from 'postcss-functions';
 
-export default function evaluateRiacssFunctions(config) {
+export default function evaluateAtomstarcssFunctions(config) {
     return functions({
         functions: {
             theme: (path, ...defaultValue) => {

@@ -2,10 +2,10 @@ import postcss from 'postcss';
 import _ from 'lodash';
 import processPlugins from './utils/processPlugins';
 import plugins from './plugins';
-import substituteRiacssAtRules from './lib/substituteRiacssAtRules';
+import substituteAtomstarcssAtRules from './lib/substituteAtomstarcssAtRules';
 import substituteScreenAtRules from './lib/substituteScreenAtRules';
 import substituteClassApplyAtRules from './lib/substituteClassApplyAtRules';
-import evaluateRiacssFunctions from './lib/evaluateRiacssFunctions';
+import evaluateAtomstarcssFunctions from './lib/evaluateAtomstarcssFunctions';
 
 
 export default function (getConfig) {
@@ -14,8 +14,8 @@ export default function (getConfig) {
         const processedPlugins = processPlugins([...plugins, ...config.plugins], config);
 
         return postcss([
-            substituteRiacssAtRules(processedPlugins.utilities),
-            evaluateRiacssFunctions(config),
+            substituteAtomstarcssAtRules(processedPlugins.utilities),
+            evaluateAtomstarcssFunctions(config),
             substituteScreenAtRules(config),
             substituteClassApplyAtRules(processedPlugins.utilities),
         ]).process(css, { from: _.get(css, 'source.input.file') });

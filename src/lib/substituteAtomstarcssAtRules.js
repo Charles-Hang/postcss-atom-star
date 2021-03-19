@@ -9,7 +9,7 @@ function updateSource(nodes, source) {
 
 export default function (utilities) {
     return function processor(css) {
-        css.walkAtRules('riacss', (atRule) => {
+        css.walkAtRules('atomstarcss', (atRule) => {
             if (atRule.params === 'utilities') {
                 atRule.before(updateSource(utilities, atRule.source));
                 atRule.remove();

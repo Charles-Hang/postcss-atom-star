@@ -1,21 +1,21 @@
 {
-    "name": "postcss-tiger-ria",
-    "version": "0.0.9",
+    "name": "postcss-atom-star",
+    "version": "0.1.0",
     "description": "A utility-first CSS framework",
     "keywords": [
         "postcss",
         "css",
         "postcss-plugin",
-        "tiger-ria"
+        "atom-star"
     ],
     "main": "lib/index.js",
     "scripts": {
         "build": "babel src --out-dir lib --copy-files",
         "test": "jest && eslint ."
     },
-    "author": "Shiwuxing Hang <hangshiwuxing@itiger.com>",
+    "author": "Shiwuxing Hang <hswxing@hotmail.com>",
     "license": "MIT",
-    "repository": "Charles Hang/postcss-tiger-ria",
+    "repository": "https://github.com/Charles-Hang/postcss-atom-star",
     "dependencies": {
         "detective": "^5.2.0",
         "lodash": "^4.17.15",

@@ -1,14 +1,14 @@
-# PostCSS Tiger Ria
+# PostCSS Atom Star
 
-一个postcss插件，获得原子化的css开发体验，能极大缩减最终css文件的大小。借鉴于[tailwindcss]
+一个 postcss 插件，获得原子化的 css 开发体验，能极大缩减最终 css 文件的大小。借鉴于[tailwindcss]
 
 [tailwindcss]: https://tailwindcss.com/
 
 <!-- TOC -->
 
-- [PostCSS Tiger Ria](#postcss-tiger-ria)
+- [PostCSS Atom Star](#postcss-atom-star)
     - [安装](#安装)
-    - [vscode补全提示插件](#vscode补全提示插件)
+    - [vscode 补全提示插件](#vscode-补全提示插件)
     - [文档](#文档)
         - [基本使用](#基本使用)
             - [工具类](#工具类)
@@ -27,14 +27,16 @@
 ## 安装
 
 ```
-npm i -D postcss-tiger-ria
+npm i -D postcss-atom-star
 ```
-依赖于[postcss]，将本插件加入postcss插件列表即可
+
+依赖于[postcss]，将本插件加入 postcss 插件列表即可
+
 ```diff
 // example postcss.config.js
 module.exports = {
     plugins: [
-+       require('postcss-tiger-ria'),
++       require('postcss-atom-star'),
         require('autoprefixer')
     ]
 }
@@ -42,11 +44,11 @@ module.exports = {
 
 [postcss]: https://github.com/postcss/postcss#usage
 
-## vscode补全提示插件
+## vscode 补全提示插件
 
-vscode下提供了补全提示插件[ria css autocomplete vscode]
+vscode 下提供了补全提示插件[atom star auto complete]
 
-[ria css autocomplete vscode]: https://marketplace.visualstudio.com/items?itemName=tiger-hswx.ria-css-autocomplete-vscode
+[atom star auto complete]: https://marketplace.visualstudio.com/items?itemName=hswxing.atom-star-auto-complete
 
 ## 文档
 
@@ -54,26 +56,32 @@ vscode下提供了补全提示插件[ria css autocomplete vscode]
 
 #### 工具类
 
-本postcss插件的核心功能便是通过配置文件，按原子化的思想生成工具类以供开发使用，例如
+本 postcss 插件的核心功能便是通过配置文件，按原子化的思想生成工具类以供开发使用，例如
+
 ```jsx
-{/* react组件中 */}
+{
+    /* react组件中 */
+}
 <div className="p-24 rounded">
     <h3 className="font-16 text-black">title</h3>
     <p className="text-gray">this is a message.</p>
-</div>
+</div>;
 ```
+
 其中，p-24 -> padding: 24px， rounded -> border-radius: 4px，font-16 -> font-size: 16px，text-black -> text-color: #333，text-gray -> text-color: #888e98，开发时顺着思路将这些基础的工具类写出即可，可通过配置文件修改及添加新的工具类，配置相关的说明后面会具体再说
 
-开启这一功能需要在你的样式文件中写入`@riacss utilities;`，便会在这个位置插入你所需的工具类：
+开启这一功能需要在你的样式文件中写入`@atomstarcss utilities;`，便会在这个位置插入你所需的工具类：
+
 ```css
 /* 你的样式文件 */
 /* 生成的工具类会插入到这个位置 */
-@riacss utilities;
+@atomstarcss utilities;
 ```
 
 #### @apply
 
 也可在你的样式文件中使用工具类：
+
 ```css
 .btn {
     @apply font-bold py-8 px-16 rounded;
@@ -98,20 +106,23 @@ vscode下提供了补全提示插件[ria css autocomplete vscode]
     /* custom css */
 }
 ```
-不支持!important的功能
+
+不支持!important 的功能
 
 #### theme()
 
-当@apply不能满足开发需求时，可以使用theme()方法调用配置文件中theme里配置的变量：
+当@apply 不能满足开发需求时，可以使用 theme()方法调用配置文件中 theme 里配置的变量：
+
 ```css
 .btn {
-    background: theme('colors.gray.light');
+    background: theme("colors.gray.light");
 }
 ```
 
 #### @screen
 
 提供了一种便捷的响应式媒体查询使用方式：
+
 ```css
 @screen md {
     .btn {
@@ -131,83 +142,83 @@ vscode下提供了补全提示插件[ria css autocomplete vscode]
     /* custom css */
 }
 ```
-md为配置文件中screens中的项，(min-width: 640px)为md的配置，配置相关的说明后面会具体再说
+
+md 为配置文件中 screens 中的项，(min-width: 640px)为 md 的配置，配置相关的说明后面会具体再说
 
 ### 配置
 
-默认情况下，会在你的项目根目录寻找名为riacss.config.js的配置文件，也可以自定义配置文件路径
+默认情况下，会在你的项目根目录寻找名为 atomstarcss.config.js 的配置文件，也可以自定义配置文件路径
+
 ```js
 // postcss.config.js
 module.exports = {
-    plugins: [
-        require('postcss-tiger-ria')('./riacss-config.js'),
-    ],
-}
+    plugins: [require("postcss-atom-star")("./atomstarcss-config.js")],
+};
 ```
+
 ```js
 // 举例，你的配置文件
 module.exports = {
     screens: {
-        sm: '640px',
-        md: '768px',
-        lg: '1024px',
-        xl: '1280px',
+        sm: "640px",
+        md: "768px",
+        lg: "1024px",
+        xl: "1280px",
     },
     theme: {
         extend: {
             colors: {
                 font: {
-                    cyan: '#9cdbff',
+                    cyan: "#9cdbff",
                 },
             },
         },
     },
     style: {
         display: {
-            hidden: 'none',
-            block: 'block',
-            'inline-block': 'inline-block',
-            inline: 'inline',
-            flex: 'flex',
-            'inline-flex': 'inline-flex',
+            hidden: "none",
+            block: "block",
+            "inline-block": "inline-block",
+            inline: "inline",
+            flex: "flex",
+            "inline-flex": "inline-flex",
         },
-        zIndex: (theme) => theme('size.zIndex'),
+        zIndex: (theme) => theme("size.zIndex"),
     },
     plugins: [],
-}
+};
 ```
 
 #### screens
 
-screens配置的属性名就是@screen便捷媒体查询的参数。属性值则有以下几种配法：
+screens 配置的属性名就是@screen 便捷媒体查询的参数。属性值则有以下几种配法：
+
 ```js
-// riacss.config.js
+// atomstarcss.config.js
 module.exports = {
     screens: {
-        'sm': '640px',
+        sm: "640px",
         // => @media (min-width: 640px) { ... }
 
-        'md': {'min': '768px', 'max': '1023px'},
+        md: { min: "768px", max: "1023px" },
         // => @media (min-width: 768px) and (max-width: 1023px) { ... }
 
-        'lg': {'max': '1024px'},
+        lg: { max: "1024px" },
         // => @media (max-width: 1024px) { ... }
 
-        'xl': [
-            {'min': '1200px', 'max': '1400px'},
-            {'min': '1500px'}
-        ],
+        xl: [{ min: "1200px", max: "1400px" }, { min: "1500px" }],
         // => @media (min-width: 1200px) and (max-width: 1400px), (min-width: 1500px) { ... }
 
-        'portrait': {'raw': '(orientation: portrait)'},
+        portrait: { raw: "(orientation: portrait)" },
         // => @media (orientation: portrait) { ... }
-    }
-}
+    },
+};
 ```
 
 #### theme
 
-theme是要用到的定制主题，theme的属性的定义会直接覆盖默认配置，如果只是想拓展而不是覆盖则使用extend来配置即可，如上面的例子。theme可随意配置，theme配置的属性既可以是对象也可以是方法，这个方法可以获取自身的配置，如下：
+theme 是要用到的定制主题，theme 的属性的定义会直接覆盖默认配置，如果只是想拓展而不是覆盖则使用 extend 来配置即可，如上面的例子。theme 可随意配置，theme 配置的属性既可以是对象也可以是方法，这个方法可以获取自身的配置，如下：
+
 ```js
 theme: {
     colors: {
@@ -226,6 +237,7 @@ theme: {
 ```
 
 默认配置为：
+
 ```js
 theme: {
     colors: {
@@ -317,7 +329,8 @@ theme: {
 
 #### style
 
-style是生成工具类的具体定义，style对象里的键名不可更改，只可配置属性值。style里的属性值既可以是对象也可以是个方法，方法的参数就是用于获取theme配置的方法，如上面的例子。工具类的生成上按一定的规则，key拼在类名中，key为`default`时表示不拼接，若就想拼default则使用`-default`代替，value拼在属性中，下面是默认的配置说明
+style 是生成工具类的具体定义，style 对象里的键名不可更改，只可配置属性值。style 里的属性值既可以是对象也可以是个方法，方法的参数就是用于获取 theme 配置的方法，如上面的例子。工具类的生成上按一定的规则，key 拼在类名中，key 为`default`时表示不拼接，若就想拼 default 则使用`-default`代替，value 拼在属性中，下面是默认的配置说明
+
 ```js
 // 默认的style配置
 style: {
@@ -588,7 +601,9 @@ style: {
     },
 }
 ```
+
 除了上面的类还有一个:
+
 ```css
 .truncate {
     overflow: hidden;
@@ -599,50 +614,53 @@ style: {
 
 #### plugins
 
-plugins是用于自定义工具类的插件，默认为空数组
+plugins 是用于自定义工具类的插件，默认为空数组
+
 ```js
-// riacss.config.js
+// atomstarcss.config.js
 module.exports = {
     plugins: [
-        function({ addUtilities, escape, config, style }) {
+        function ({ addUtilities, escape, config, style }) {
             // 自定义插件内容
         },
-    ]
-}
+    ],
+};
 ```
+
 `addUtilities()`用于添加自定义工具类
 
 `escape()`用于转义要在类名中使用的字符串
 
-`config()`用于获取配置文件的信息如config('theme.colors')
+`config()`用于获取配置文件的信息如 config('theme.colors')
 
-`style()`用于获取配置文件里style的信息如style('display')
+`style()`用于获取配置文件里 style 的信息如 style('display')
 
 ##### 自定义工具类
 
 ```js
-// riacss.config.js
+// atomstarcss.config.js
 module.exports = {
     plugins: [
-        function({ addUtilities }) {
+        function ({ addUtilities }) {
             const newUtilities = {
-                '.rotate-0': {
-                transform: 'rotate(0deg)',
+                ".rotate-0": {
+                    transform: "rotate(0deg)",
                 },
-                '.rotate-90': {
-                transform: 'rotate(90deg)',
+                ".rotate-90": {
+                    transform: "rotate(90deg)",
                 },
-                '.rotate-180': {
-                transform: 'rotate(180deg)',
+                ".rotate-180": {
+                    transform: "rotate(180deg)",
                 },
-                '.rotate-270': {
-                transform: 'rotate(270deg)',
+                ".rotate-270": {
+                    transform: "rotate(270deg)",
                 },
-            }
+            };
 
-            addUtilities(newUtilities)
-        }
-    ]
-}
+            addUtilities(newUtilities);
+        },
+    ],
+};
 ```
-addUtilities第一个参数是你自定义的工具类的样式对象，遵循CSS-in-JS的语法，也支持类似Sass的嵌套用法。也可以是样式对象的数组
+
+addUtilities 参数是你自定义的工具类的样式对象，遵循 CSS-in-JS 的语法，也支持类似 Sass 的嵌套用法。也可以是样式对象的数组

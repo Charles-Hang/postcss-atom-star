@@ -40,7 +40,7 @@ export function getModuleDependencies(entryFile) {
 
 export default function (configFile) {
     if (!fs.existsSync(configFile)) {
-        throw new Error(`Specified postcss-tiger-ria config file "${configFile}" doesn't exist.`);
+        throw new Error(`Specified postcss-atom-star config file "${configFile}" doesn't exist.`);
     }
 
     return function processor(css, opts) {
